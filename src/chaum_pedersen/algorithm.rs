@@ -1,10 +1,10 @@
 use num_bigint::{ToBigInt, BigInt, RandBigInt, Sign, BigUint};
 use num_primes::{Generator};
-use rand::rngs::ThreadRng;
+use rand::{rngs::StdRng, SeedableRng};
 
 const BIT_SIZE: u16 = 256;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct ChaumPedersenParameters {
     pub p: BigInt,
     pub q: BigInt,
@@ -12,12 +12,13 @@ pub struct ChaumPedersenParameters {
     pub h: BigInt,
 }
 
-pub struct ChaumPedersenAlgorthim<'a> {
-    parameters: &'a ChaumPedersenParameters,
-    rng: ThreadRng
+#[derive(Debug)]
+pub struct ChaumPedersenAlgorthim {
+    parameters: ChaumPedersenParameters,
+    rng: StdRng
 }
 
-impl<'a> ChaumPedersenAlgorthim<'a> {
+impl ChaumPedersenAlgorthim {
     pub fn find_parameters() -> ChaumPedersenParameters {
         let p = BigInt::from_biguint(Sign::Plus, BigUint::from_bytes_be(&Generator::safe_prime(BIT_SIZE.into()).to_bytes_be()));
         let q = (&p - 1.to_bigint().unwrap()) / 2.to_bigint().unwrap();
@@ -26,8 +27,16 @@ impl<'a> ChaumPedersenAlgorthim<'a> {
         ChaumPedersenParameters { p, q, g, h, }
     }
 
-    pub fn new(parameters: &'a ChaumPedersenParameters) -> ChaumPedersenAlgorthim {
-        ChaumPedersenAlgorthim { parameters, rng: rand::thread_rng() }
+    pub fn new(parameters: &ChaumPedersenParameters) -> ChaumPedersenAlgorthim {
+        ChaumPedersenAlgorthim { parameters: parameters.clone(), rng: StdRng::from_entropy() }
+    }
+
+    pub fn get_bit_size() -> u16 {
+        BIT_SIZE
+    }
+
+    pub fn get_parameters(&self) -> &ChaumPedersenParameters {
+        &self.parameters
     }
 
     pub fn exponentiation(&self, x: &BigInt) -> (BigInt, BigInt) {
