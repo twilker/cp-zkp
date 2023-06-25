@@ -2,37 +2,33 @@ use num_bigint::{ToBigInt, BigInt, RandBigInt, Sign, BigUint};
 use num_primes::{Generator};
 use rand::{rngs::StdRng, SeedableRng};
 
-const BIT_SIZE: u16 = 256;
-
 #[derive(Clone, Debug)]
 pub struct ChaumPedersenParameters {
     pub p: BigInt,
     pub q: BigInt,
     pub g: BigInt,
     pub h: BigInt,
+    pub bit_size: u16,
 }
 
 #[derive(Debug)]
 pub struct ChaumPedersenAlgorthim {
     parameters: ChaumPedersenParameters,
-    rng: StdRng
+    rng: StdRng,
 }
 
 impl ChaumPedersenAlgorthim {
-    pub fn find_parameters() -> ChaumPedersenParameters {
-        let p = BigInt::from_biguint(Sign::Plus, BigUint::from_bytes_be(&Generator::safe_prime(BIT_SIZE.into()).to_bytes_be()));
+    pub fn find_parameters(bit_size: u16) -> ChaumPedersenParameters {
+        let p = BigInt::from_biguint(Sign::Plus, BigUint::from_bytes_be(&Generator::safe_prime(bit_size.into()).to_bytes_be()));
         let q = (&p - 1.to_bigint().unwrap()) / 2.to_bigint().unwrap();
         let g = 4.to_bigint().unwrap();
         let h = 9.to_bigint().unwrap();
-        ChaumPedersenParameters { p, q, g, h, }
+        ChaumPedersenParameters { p, q, g, h, bit_size }
     }
 
     pub fn new(parameters: &ChaumPedersenParameters) -> ChaumPedersenAlgorthim {
+        println!("Algorithm initialized with parameters: {:?}", parameters);
         ChaumPedersenAlgorthim { parameters: parameters.clone(), rng: StdRng::from_entropy() }
-    }
-
-    pub fn get_bit_size() -> u16 {
-        BIT_SIZE
     }
 
     pub fn get_parameters(&self) -> &ChaumPedersenParameters {
@@ -48,7 +44,7 @@ impl ChaumPedersenAlgorthim {
     pub fn generate_random(&mut self) -> BigInt {
         let mut c = 0.to_bigint().unwrap();
         while c <= 1.to_bigint().unwrap() {
-            c = BigInt::from_biguint(Sign::Plus, self.rng.gen_biguint(BIT_SIZE.into()));
+            c = BigInt::from_biguint(Sign::Plus, self.rng.gen_biguint(self.parameters.bit_size.into()));
         }
         c
     }

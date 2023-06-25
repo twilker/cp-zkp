@@ -9,6 +9,8 @@ pub mod auth_server {
     tonic::include_proto!("zkp_auth"); // The string specified here must match the proto package name
 }
 
+const BIT_SIZE: u16 = 256;
+
 #[derive(Debug)]
 pub struct CPAuthServer {
     algorithm: pedersen::ChaumPedersenAlgorthim
@@ -31,7 +33,7 @@ impl Auth for CPAuthServer {
             q: parameters.q.to_bytes_be().1,
             g: parameters.g.to_bytes_be().1,
             h: parameters.h.to_bytes_be().1,
-            bit_size: pedersen::ChaumPedersenAlgorthim::get_bit_size().into()
+            bit_size: parameters.bit_size.into()
         };
 
         Ok(Response::new(response))
@@ -53,7 +55,7 @@ impl Auth for CPAuthServer {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let addr = "[::1]:50051".parse()?;
-    let parameters = pedersen::ChaumPedersenAlgorthim::find_parameters();
+    let parameters = pedersen::ChaumPedersenAlgorthim::find_parameters(BIT_SIZE);
     let algorithm = pedersen::ChaumPedersenAlgorthim::new(&parameters);
     let auth_server = CPAuthServer::new(algorithm);
 

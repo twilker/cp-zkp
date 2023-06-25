@@ -6,9 +6,11 @@ use rustc_hash::FxHasher;
 use std::time::{Instant};
 use chaum_pedersen::algorithm as pedersen;
 
+const BIT_SIZE: u16 = 256;
+
 fn main() {
     let mut now = Instant::now();
-    let parameters = pedersen::ChaumPedersenAlgorthim::find_parameters();
+    let parameters = pedersen::ChaumPedersenAlgorthim::find_parameters(BIT_SIZE);
     let mut algorithm = pedersen::ChaumPedersenAlgorthim::new(&parameters);
     println!("Time to generate p: {}ms", now.elapsed().as_millis());
 
