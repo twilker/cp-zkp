@@ -7,6 +7,7 @@ use num_bigint::{BigInt, Sign, ToBigInt};
 use uuid::Uuid;
 use std::{hash::{Hash, Hasher}};
 use rustc_hash::FxHasher;
+use std::time::{Instant};
 
 pub mod auth_client {
     tonic::include_proto!("zkp_auth"); // The string specified here must match the proto package name
@@ -45,8 +46,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     println!("Registered user");
 
+    let now = Instant::now();
+
     println!("Authentication process");
-    
+
     x = calculate_hash(&"My Super Secret Password".to_string());
     let k = algorithm.generate_random();
     let (r1, r2) = algorithm.exponentiation(&k);
@@ -72,6 +75,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let answer = answer_response.into_inner();
 
     println!("Received answer {:?}", answer);
+
+    println!("Time to authenticate: {}ms", now.elapsed().as_millis());
 
     Ok(())
 }
