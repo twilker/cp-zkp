@@ -5,6 +5,7 @@ use std::{hash::{Hash, Hasher}};
 use rustc_hash::FxHasher;
 use std::time::{Instant};
 use chaum_pedersen::algorithm as pedersen;
+use chaum_pedersen::algorithm::ChaumPedersen;
 
 const BIT_SIZE: u16 = 256;
 

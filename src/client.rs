@@ -3,6 +3,7 @@ mod chaum_pedersen;
 use auth_client::{RegisterRequest, AuthenticationChallengeRequest, AuthenticationAnswerRequest};
 use auth_client::auth_client::AuthClient;
 use chaum_pedersen::algorithm as pedersen;
+use chaum_pedersen::algorithm::ChaumPedersen;
 use num_bigint::{BigInt, Sign, ToBigInt};
 use uuid::Uuid;
 use std::{hash::{Hash, Hasher}};

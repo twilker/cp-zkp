@@ -11,3 +11,5 @@ Design and write the code that implements the ZKP Chaum–Pedersen Protocol outl
 - Implement basic gRPC server with simple data access layer
 
 At this point I did it hackathon style. Meaning choosing the fastest way to the desired result. From this point on I concentrated on the aspects relevant for develoing production ready code.
+
+- Use traits to abstract structs in preparation for testing
