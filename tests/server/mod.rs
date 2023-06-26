@@ -2,7 +2,7 @@ use std::sync::{Arc, RwLock};
 
 use auth_lib::chaum_pedersen::algorithm::{ChaumPedersenParameters, ChaumPedersenAlgorthim, ChaumPedersen};
 use auth_lib::cp_grpc::auth_server::Auth;
-use auth_lib::{bootstrap, Config};
+use auth_lib::{bootstrap_server, Config};
 use num_bigint::{BigInt, Sign};
 use auth_lib::cp_grpc::{RegisterRequest, AuthenticationChallengeRequest};
 use uuid::Uuid;
@@ -39,7 +39,7 @@ impl TestContext
     {        
         let mut config = Config::build();
         config.fixed_parameters = true;
-        let server = bootstrap(Some(config));
+        let server = bootstrap_server(Some(config));
         
         TestContext {
             server: Arc::new(Box::new(server)),
