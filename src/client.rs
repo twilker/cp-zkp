@@ -1,7 +1,7 @@
 use auth_lib::bootstrap_client;
 use uuid::Uuid;
 use std::time::{Instant};
-use auth_lib::grpc::chaum_pederson_client::AuthClient;
+use auth_lib::grpc::chaum_pedersen_client::AuthClient;
 
 pub mod auth_client {
     tonic::include_proto!("zkp_auth"); // The string specified here must match the proto package name

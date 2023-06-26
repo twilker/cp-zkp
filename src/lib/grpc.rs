@@ -1,2 +1,2 @@
-pub mod chaum_pederson_server;
-pub mod chaum_pederson_client;
+pub mod chaum_pedersen_server;
+pub mod chaum_pedersen_client;

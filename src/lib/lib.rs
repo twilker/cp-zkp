@@ -1,15 +1,17 @@
 pub mod chaum_pedersen;
-mod data_access;
 pub mod grpc;
+mod data_access;
+mod logic;
 
-use std::{sync::Arc, error::Error};
+use std::{sync::Arc, sync::RwLock, error::Error};
 use std::env;
 use cp_grpc::auth_server::Auth;
-use grpc::chaum_pederson_client::AuthClient;
-use tokio::sync::RwLock;
+use grpc::chaum_pedersen_client::AuthClient;
+use logic::chaum_pedersen_logic::ChaumPedersenLogicImpl;
+use logic::chaum_pedesen_validation::ChaumPedersenValidationImpl;
 use chaum_pedersen::algorithm::{ChaumPedersenAlgorthim, ChaumPedersenParameters};
 use data_access::map_access::MapDataAccess;
-use grpc::{chaum_pederson_server::CPAuthServer, chaum_pederson_client::CPAuthClient};
+use grpc::{chaum_pedersen_server::CPAuthServer, chaum_pedersen_client::CPAuthClient};
 use std::{hash::{Hash, Hasher}};
 use num_bigint::{BigInt, ToBigInt, Sign};
 use rustc_hash::FxHasher;
@@ -47,7 +49,9 @@ pub fn bootstrap_server(config: Option<Config>) -> impl Auth {
     let parameters = ChaumPedersenAlgorthim::find_parameters(config.bit_size, config.fixed_parameters);
     let algorithm = Arc::new(RwLock::new(ChaumPedersenAlgorthim::new(&parameters)));
     let data_access = Arc::new(RwLock::new(MapDataAccess::new()));
-    CPAuthServer::new(algorithm, data_access)
+    let validation = Arc::new(RwLock::new(ChaumPedersenValidationImpl::new(data_access.clone())));
+    let logic = Arc::new(RwLock::new(ChaumPedersenLogicImpl::new(algorithm.clone(), data_access.clone(), validation.clone())));
+    CPAuthServer::new(logic)
 }
 
 pub async fn bootstrap_client<T, D>(destination: D) -> Result<Box<dyn AuthClient>, Box<dyn Error>>
@@ -68,7 +72,7 @@ where
         bit_size: encoded_parameters.bit_size as u16
     };
     let algorithm = ChaumPedersenAlgorthim::new(&parameters);
-    let client = CPAuthClient::new(Arc::new(RwLock::new(client)), Arc::new(RwLock::new(algorithm)));
+    let client = CPAuthClient::new(Arc::new(tokio::sync::RwLock::new(client)), Arc::new(tokio::sync::RwLock::new(algorithm)));
     Ok(Box::new(client))
 }
 
