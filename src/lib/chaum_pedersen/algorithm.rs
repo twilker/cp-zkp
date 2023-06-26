@@ -1,9 +1,23 @@
+use std::{sync::RwLock, str::FromStr};
+use std::collections::HashMap;
 use num_bigint::{ToBigInt, BigInt, RandBigInt, Sign, BigUint};
 use num_primes::{Generator};
 use rand::{rngs::StdRng, SeedableRng};
+use once_cell::sync::Lazy;
+
+static FIXED_PARAMETERS: Lazy<RwLock<HashMap<u16, ChaumPedersenParameters>>> = Lazy::new(|| {
+    let mut m = HashMap::new();
+    m.insert(256, ChaumPedersenParameters{
+        p: BigInt::from_str("42765216643065397982265462252423826320512529931694366715111734768493812630447").unwrap(),
+        q: BigInt::from_str("21382608321532698991132731126211913160256264965847183357555867384246906315223").unwrap(),
+        g: BigInt::from_str("4").unwrap(),
+        h: BigInt::from_str("9").unwrap(),
+        bit_size: 256
+    });
+    RwLock::new(m)
+});
 
 pub trait ChaumPedersen {
-    fn find_parameters(bit_size: u16) -> ChaumPedersenParameters;
     fn get_parameters(&self) -> &ChaumPedersenParameters;
     fn exponentiation(&self, x: &BigInt) -> (BigInt, BigInt);
     fn generate_random(&mut self) -> BigInt;
@@ -31,17 +45,21 @@ impl ChaumPedersenAlgorthim {
         println!("Algorithm initialized with parameters: {:?}", parameters);
         ChaumPedersenAlgorthim { parameters: parameters.clone(), rng: StdRng::from_entropy() }
     }
-}
 
-impl ChaumPedersen for ChaumPedersenAlgorthim {
-    fn find_parameters(bit_size: u16) -> ChaumPedersenParameters {
+    pub fn find_parameters(bit_size: u16, fixed_parameters: bool) -> ChaumPedersenParameters {
+        if fixed_parameters {
+            let parameters = FIXED_PARAMETERS.read().unwrap();
+            return parameters.get(&bit_size).expect("No fixed parameters for this bit size defined").clone();
+        }
         let p = BigInt::from_biguint(Sign::Plus, BigUint::from_bytes_be(&Generator::safe_prime(bit_size.into()).to_bytes_be()));
         let q = (&p - 1.to_bigint().unwrap()) / 2.to_bigint().unwrap();
         let g = 4.to_bigint().unwrap();
         let h = 9.to_bigint().unwrap();
         ChaumPedersenParameters { p, q, g, h, bit_size }
     }
+}
 
+impl ChaumPedersen for ChaumPedersenAlgorthim {
     fn get_parameters(&self) -> &ChaumPedersenParameters {
         &self.parameters
     }

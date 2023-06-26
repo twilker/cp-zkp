@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
-use crate::auth_server::*;
-use crate::auth_server::auth_server::Auth;
+use crate::cp_grpc::*;
+use crate::cp_grpc::auth_server::Auth;
 use num_bigint::{BigInt, Sign};
 use tokio::sync::RwLock;
 use tonic::{Request, Response, Status};

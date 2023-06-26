@@ -107,6 +107,7 @@ dependencies = [
  "num-bigint 0.4.3",
  "num-primes",
  "num-traits",
+ "once_cell",
  "prost",
  "rand 0.8.5",
  "rustc-hash",

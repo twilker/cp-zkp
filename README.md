@@ -13,3 +13,8 @@ Design and write the code that implements the ZKP Chaum–Pedersen Protocol outl
 At this point I did it hackathon style. Meaning choosing the fastest way to the desired result. From this point on I concentrated on the aspects relevant for develoing production ready code.
 
 - Use traits to abstract structs in preparation for testing
+- Write integration tests for core use case. This allows me to do refactorings without breaking it.
+
+# Improvments
+
+- Integration tests as gherkin tests with [cucumber-rs](https://cucumber-rs.github.io/cucumber/current/)

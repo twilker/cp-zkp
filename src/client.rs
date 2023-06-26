@@ -1,13 +1,9 @@
-mod chaum_pedersen;
-
-use auth_client::{RegisterRequest, AuthenticationChallengeRequest, AuthenticationAnswerRequest};
-use auth_client::auth_client::AuthClient;
-use chaum_pedersen::algorithm as pedersen;
-use chaum_pedersen::algorithm::ChaumPedersen;
-use num_bigint::{BigInt, Sign, ToBigInt};
+use auth_lib::cp_grpc::{RegisterRequest, AuthenticationChallengeRequest, AuthenticationAnswerRequest};
+use auth_lib::cp_grpc::auth_client::AuthClient;
+use auth_lib::chaum_pedersen::algorithm as pedersen;
+use auth_lib::chaum_pedersen::algorithm::ChaumPedersen;
+use num_bigint::{BigInt, Sign};
 use uuid::Uuid;
-use std::{hash::{Hash, Hasher}};
-use rustc_hash::FxHasher;
 use std::time::{Instant};
 
 pub mod auth_client {
@@ -34,7 +30,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     println!("Register user");
 
-    let mut x = calculate_hash(&"My Super Secret Password".to_string());
+    let mut x = auth_lib::calculate_hash(&"My Super Secret Password".to_string());
     let (y1, y2) = algorithm.exponentiation(&x);
     let user = Uuid::new_v4().to_string();
 
@@ -51,7 +47,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     println!("Authentication process");
 
-    x = calculate_hash(&"My Super Secret Password".to_string());
+    x = auth_lib::calculate_hash(&"My Super Secret Password".to_string());
     let k = algorithm.generate_random();
     let (r1, r2) = algorithm.exponentiation(&k);
     
@@ -80,11 +76,4 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("Time to authenticate: {}ms", now.elapsed().as_millis());
 
     Ok(())
-}
-
-
-fn calculate_hash<T: Hash>(t: &T) -> BigInt {
-    let mut s = FxHasher::default();
-    t.hash(&mut s);
-    s.finish().to_bigint().unwrap()
 }
