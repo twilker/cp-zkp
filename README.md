@@ -1,5 +1,7 @@
 # Zero Knowledge Proof - Chaum–Pedersen Authentication
 
+[![build-badge](https://github.com/twilker/cp-zkp/actions/workflows/build.yml/badge.svg)](https://nightly.link/twilker/cp-zkp/workflows/build/main/binaries.zip)
+[![test-badge](https://github.com/twilker/cp-zkp/actions/workflows/test.yml/badge.svg)](https://github.com/twilker/cp-zkp/actions/workflows/test.yml)
 [![document-badge](https://github.com/twilker/cp-zkp/actions/workflows/doc.yml/badge.svg)](https://twilker.github.io/cp-zkp)
 [![license-badge](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
 
@@ -39,12 +41,14 @@ At this point my time for implementation was running out, so I stopped at this p
 - Documentation for the library root module - this is the least amount of necessary documentation
 - Added docker container for the server and client
 - Added command line interface for the client
+- Added github actions for building, testing and documentation to ensure code quality
 
 ## Improvments
 
 - Testing
   - Unit tests for the core algorithm
   - Integration tests as gherkin tests with [cucumber-rs](https://cucumber-rs.github.io/cucumber/current/)
+  - Code coverage to find untested code
 - Design
   - Use an event driven architecture to decouple the different parts of the application
 - Code quality / Robustness
