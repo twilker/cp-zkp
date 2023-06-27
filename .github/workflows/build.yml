@@ -1,0 +1,34 @@
+name: build
+
+on:
+  push:
+#    branches:
+#      - master
+
+jobs:
+  build:
+    name: Build all binaries and libraries
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y protobuf-compiler libprotobuf-dev
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: Build release
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release
+      - name: Deploy binaries as artifatcs
+        uses: actions/upload-artifact@v3
+        with:
+          name: binaries
+          path: |
+            target/release/auth_client
+            target/release/auth_server
