@@ -1,8 +1,13 @@
-# Task
+# Zero Knowledge Proof - Chaum–Pedersen Authentication
+
+[![document-badge](https://github.com/twilker/cp-zkp/actions/workflows/doc.yml/badge.svg)](https://twilker.github.io/cp-zkp)
+[![license-badge](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
+
+## Task
 
 Design and write the code that implements the ZKP Chaum–Pedersen Protocol outlined in ["Cryptography: An Introduction (3rd Edition) Nigel Smart"](https://www.cs.umd.edu/~waa/414-F11/IntroToCrypto.pdf) page 377 section "3. Sigma Protocols" subsection "3.2. Chaum–Pedersen Protocol.". Solution should be implemented as server and client using gRPC protocol according to the provided interface described in the './proto/auth.proto' file. The code should implement very simple server and client applications.
 
-# Architecture
+## Architecture
 
 This app follows roughly the [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html). This architecture is supposed to protect the most important aspects of the application - the business logic.
 
@@ -14,7 +19,7 @@ Here I have a design smell, because the use case layer is accessing the data sto
 
 The logic layer only contains the algortihm. I added this layer because the algorithm is the most sacred part of the code. It should be protected from changes as much as possible. The logic layer is also the only layer that is not allowed to access any other layer.
 
-# Approach
+## Approach
 
 - Understand and test Chaum–Pedersen protocol
 - Implement useable protcol service
@@ -35,7 +40,7 @@ At this point my time for implementation was running out, so I stopped at this p
 - Added docker container for the server and client
 - Added command line interface for the client
 
-# Improvments
+## Improvments
 
 - Testing
   - Unit tests for the core algorithm
@@ -49,7 +54,7 @@ At this point my time for implementation was running out, so I stopped at this p
   - Reduce/Remove RwLocks as much as possible - this will be a huge bottleneck
   - Use a database to handle growing data amount and for perstistence
 
-# How to run
+## How to run
 The application is dockerized and can be run with docker-compose. The docker-compose file is located in the root directory.
 
 ```bash
@@ -64,12 +69,12 @@ docker exec -it <folder-name>-client-1 bash
 
 Alternatively the application can be run with cargo. This requires the [rust toolchain]((https://www.rust-lang.org/tools/install)) to be installed:
 
-## Run the server
+### Run the server
 ```bash
 cargo run --bin auth-server
 ```
 
-## Run the client
+### Run the client
 The client requires the server to be running. It is a CLI application that can be run with the following command:
 
 ```bash
