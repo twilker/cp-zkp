@@ -8,7 +8,13 @@ on:
 jobs:
   deloy_docs:
     name: Generate and deploy documentation
+
+    permissions:
+      contents: write
+      pages: write
+
     runs-on: ubuntu-latest
+
     steps:
       - name: Install dependencies
         run: |
