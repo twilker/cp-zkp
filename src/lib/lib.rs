@@ -1,4 +1,11 @@
+#![warn(missing_docs)]
+//! # Chaum-Pedersen Zero-Knowledge Proof Authentication
+//! This crate provides a Chaum-Pedersen zero-knowledge proof authentication scheme.
+//! It provides functionality for both a server and a client using gRPC.
+
+#[doc(hidden)]
 pub mod chaum_pedersen;
+#[doc(hidden)]
 pub mod grpc;
 mod data_access;
 mod logic;
@@ -20,16 +27,35 @@ use tonic::codegen::StdError;
 const DEFAULT_BIT_SIZE: &str = "256";
 const DEFAULT_FIXED_PARAMETERS: &str = "false";
 
+#[doc(hidden)]
 pub mod cp_grpc {
     tonic::include_proto!("zkp_auth"); // The string specified here must match the proto package name
 }
 
+#[doc = include_str!("../../README.md")]
+#[cfg(doctest)]
+pub struct ReadmeDoctests;
+
+/// The configuration for the Chaum-Pedersen authentication scheme
+/// It reads arguments from the environment variables and provides default values for missing environment variables.
+/// # Example
+/// This is how the configuration can be modified inside the code:
+/// ```
+/// # use auth_lib::Config;
+/// let mut config = Config::build();
+/// config.bit_size = 128;
+/// ```
 pub struct Config {
+    /// The bit size of the prime number used in the algorithm
     pub bit_size: u16,
+    /// Whether to use fixed parameters or generate new ones
+    /// Caution! If this is set to true and the bit size is bigger than 256,
+    /// it will take a long time for the server to start.
     pub fixed_parameters: bool
 }
 
 impl Config {
+    /// Builds the configuration from the environment variables
     pub fn build() -> Config {
         Config {
             bit_size: env::var("BIT_SIZE")
@@ -44,6 +70,32 @@ impl Config {
     }
 }
 
+/// Builds the server with the given configuration.
+/// If no configuration is given, it will use the default configuration.
+/// 
+/// # Example
+/// This is how the server can be started:
+/// ```
+/// # use auth_lib::Config;
+/// # use auth_lib::bootstrap_server;
+/// use auth_lib::cp_grpc::auth_server::AuthServer;
+/// 
+/// # let mut config = Config::build();
+/// # config.fixed_parameters = true;
+/// let server = bootstrap_server(Some(config));
+/// let addr: std::net::SocketAddr = "[::1]:50051".parse()?;
+/// 
+/// // This is the ready-to-use grpc server
+/// let grpc_server = AuthServer::new(server);
+///
+/// // Usable in a tonic server like this:
+/// /*tonic::transport::Server::builder()
+///    .add_service(AuthServer::new(server))
+///    .serve(addr)
+///    .await?;
+/// */
+/// # Ok::<(), Box<dyn std::error::Error>>(())
+/// ```
 pub fn bootstrap_server(config: Option<Config>) -> impl Auth {
     let config = config.unwrap_or(Config::build());
     let parameters = ChaumPedersenAlgorthim::find_parameters(config.bit_size, config.fixed_parameters);
@@ -54,6 +106,9 @@ pub fn bootstrap_server(config: Option<Config>) -> impl Auth {
     CPAuthServer::new(logic)
 }
 
+/// Builds the client with the given configuration.
+/// If no configuration is given, it will use the default configuration.
+/// It automatically connects to the given destination and retrieves the parameters from the server.
 pub async fn bootstrap_client<T, D>(destination: D) -> Result<Box<dyn AuthClient>, Box<dyn Error>>
 where
     D: TryInto<tonic::transport::Endpoint>,
@@ -76,6 +131,7 @@ where
     Ok(Box::new(client))
 }
 
+#[doc(hidden)]
 pub fn calculate_hash<T: Hash>(t: &T) -> BigInt {
     let mut s = FxHasher::default();
     t.hash(&mut s);

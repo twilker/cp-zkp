@@ -19,6 +19,8 @@ At this point I did it hackathon style. Meaning choosing the fastest way to the 
 
 At this point my time for implementation was running out, so I stopped at this point to concentrate on getting the applications to a real environment (docker + aws)
 
+- Documentation for the library root module - this is the least amount of necessary documentation
+
 # Improvments
 
 - Integration tests as gherkin tests with [cucumber-rs](https://cucumber-rs.github.io/cucumber/current/)
