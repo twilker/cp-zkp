@@ -30,5 +30,5 @@ jobs:
         with:
           name: binaries
           path: |
-            target/release/auth_client
-            target/release/auth_server
+            target/release/auth-*
+            !target/release/**/*.*
