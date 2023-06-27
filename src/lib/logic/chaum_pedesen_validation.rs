@@ -6,7 +6,7 @@ use crate::data_access::access::DataAccess;
 
 use super::chaum_pedersen_model::{UserRegistration, UserChallengeRequest, UserSolution, ValidationErrors};
 
-pub trait ChaumPedersonValidation {
+pub trait ChaumPedersenValidation {
     fn validate_user_registration(&self, user: &UserRegistration) -> Result<(), ValidationErrors>;
     fn validate_user_challenge_request(&self, challenge: &UserChallengeRequest) -> Result<(), ValidationErrors>;
     fn validate_user_solution(&self, solution: &UserSolution) -> Result<(), ValidationErrors>;
@@ -30,7 +30,7 @@ where
     }
 }
 
-impl<Access> ChaumPedersonValidation for ChaumPedersenValidationImpl<Access>
+impl<Access> ChaumPedersenValidation for ChaumPedersenValidationImpl<Access>
 where 
     Access: DataAccess + Send + Sync + 'static
 {

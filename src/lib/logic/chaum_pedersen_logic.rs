@@ -6,9 +6,9 @@ use crate::data_access::access::DataAccess;
 use uuid::Uuid;
 
 use super::chaum_pedersen_model::Parameters;
-use super::{chaum_pedersen_model::{UserRegistration, ValidationErrors, UserChallengeRequest, UserChallengeResponse, UserSolution, SessionResponse}, chaum_pedesen_validation::ChaumPedersonValidation};
+use super::{chaum_pedersen_model::{UserRegistration, ValidationErrors, UserChallengeRequest, UserChallengeResponse, UserSolution, SessionResponse}, chaum_pedesen_validation::ChaumPedersenValidation};
 
-pub trait ChaumPedersonLogic {
+pub trait ChaumPedersenLogic {
     fn get_parameters(&self) -> Result<Parameters, ValidationErrors>;
     fn register_user(&self, user: &UserRegistration) -> Result<(), ValidationErrors>;
     fn authentication_challenge(&self, challenge: &UserChallengeRequest) -> Result<UserChallengeResponse, ValidationErrors>;
@@ -19,7 +19,7 @@ pub struct ChaumPedersenLogicImpl<Algorithm, Access, Validation>
 where 
     Algorithm: ChaumPedersen + Send + Sync + 'static,
     Access: DataAccess + Send + Sync + 'static,
-    Validation: ChaumPedersonValidation + Send + Sync + 'static 
+    Validation: ChaumPedersenValidation + Send + Sync + 'static 
 {
     algorithm: Arc<RwLock<Algorithm>>,
     data_access: Arc<RwLock<Access>>,
@@ -30,7 +30,7 @@ impl<Algorithm, Access, Validation> ChaumPedersenLogicImpl<Algorithm, Access, Va
 where 
     Algorithm: ChaumPedersen + Send + Sync + 'static,
     Access: DataAccess + Send + Sync + 'static,
-    Validation: ChaumPedersonValidation + Send + Sync + 'static 
+    Validation: ChaumPedersenValidation + Send + Sync + 'static 
 {
     pub fn new(algorithm: Arc<RwLock<Algorithm>>, data_access: Arc<RwLock<Access>>, validation: Arc<RwLock<Validation>>) -> Self {
         Self {
@@ -41,11 +41,11 @@ where
     }
 }
 
-impl<Algorithm, Access, Validation> ChaumPedersonLogic for ChaumPedersenLogicImpl<Algorithm, Access, Validation> 
+impl<Algorithm, Access, Validation> ChaumPedersenLogic for ChaumPedersenLogicImpl<Algorithm, Access, Validation> 
 where 
     Algorithm: ChaumPedersen + Send + Sync + 'static,
     Access: DataAccess + Send + Sync + 'static,
-    Validation: ChaumPedersonValidation + Send + Sync + 'static
+    Validation: ChaumPedersenValidation + Send + Sync + 'static
 {
     fn get_parameters(&self) -> Result<Parameters, ValidationErrors> {
         let algorithm = self.algorithm.read().unwrap();

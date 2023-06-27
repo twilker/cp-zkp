@@ -103,7 +103,7 @@ impl Config {
 /// # let mut config = Config::build();
 /// # config.fixed_parameters = true;
 /// let server = bootstrap_server(Some(config));
-/// let addr = format!("{}:{}", config.host, config.port).parse()?;
+/// let addr: std::net::SocketAddr = "[::1]:50051".parse()?;
 /// 
 /// // This is the ready-to-use grpc server
 /// let grpc_server = AuthServer::new(server);

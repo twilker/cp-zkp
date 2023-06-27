@@ -3,21 +3,21 @@ use std::sync::{RwLock, Arc};
 use crate::logic::chaum_pedersen_model::{ValidationErrors, UserChallengeRequest, UserSolution};
 use crate::{cp_grpc::*, logic::chaum_pedersen_model::UserRegistration};
 use crate::cp_grpc::auth_server::Auth;
-use crate::logic::chaum_pedersen_logic::ChaumPedersonLogic;
+use crate::logic::chaum_pedersen_logic::ChaumPedersenLogic;
 use num_bigint::{BigInt, Sign};
 use tonic::{Request, Response, Status};
 
 #[derive(Debug)]
 pub struct CPAuthServer<Logic> 
 where 
-    Logic: ChaumPedersonLogic + Send + Sync + 'static,
+    Logic: ChaumPedersenLogic + Send + Sync + 'static,
 {
     logic: Arc<RwLock<Logic>>,
 }
 
 impl<Logic> CPAuthServer<Logic> 
 where 
-    Logic: ChaumPedersonLogic + Send + Sync + 'static,
+    Logic: ChaumPedersenLogic + Send + Sync + 'static,
 {
     pub fn new(logic: Arc<RwLock<Logic>>) -> Self {
         Self {
@@ -29,7 +29,7 @@ where
 #[tonic::async_trait]
 impl<Logic> Auth for CPAuthServer<Logic> 
 where 
-    Logic: ChaumPedersonLogic + Send + Sync + 'static,
+    Logic: ChaumPedersenLogic + Send + Sync + 'static,
 {
     async fn get_authentication_parameters(&self, _request: Request<()>) -> Result<Response<AuthenticationParametersResponse>, Status> {
         let logic = self.logic.read().unwrap();

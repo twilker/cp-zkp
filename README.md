@@ -32,6 +32,8 @@ At this point I did it hackathon style. Meaning choosing the fastest way to the 
 At this point my time for implementation was running out, so I stopped at this point to concentrate on getting the applications to a real environment (docker + aws)
 
 - Documentation for the library root module - this is the least amount of necessary documentation
+- Added docker container for the server and client
+- Added command line interface for the client
 
 # Improvments
 
@@ -54,6 +56,12 @@ The application is dockerized and can be run with docker-compose. The docker-com
 docker-compose up
 ```
 
+Once the server is running, the client container can be accessed with the following command:
+
+```bash
+docker exec -it <folder-name>-client-1 bash
+```
+
 Alternatively the application can be run with cargo. This requires the [rust toolchain]((https://www.rust-lang.org/tools/install)) to be installed:
 
 ## Run the server
@@ -62,6 +70,10 @@ cargo run --bin auth-server
 ```
 
 ## Run the client
+The client requires the server to be running. It is a CLI application that can be run with the following command:
+
 ```bash
-cargo run --bin auth-client
+cargo run --bin auth-client help
 ```
+
+This command will print the interface of the client application.
