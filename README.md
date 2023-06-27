@@ -2,6 +2,18 @@
 
 Design and write the code that implements the ZKP Chaum–Pedersen Protocol outlined in ["Cryptography: An Introduction (3rd Edition) Nigel Smart"](https://www.cs.umd.edu/~waa/414-F11/IntroToCrypto.pdf) page 377 section "3. Sigma Protocols" subsection "3.2. Chaum–Pedersen Protocol.". Solution should be implemented as server and client using gRPC protocol according to the provided interface described in the './proto/auth.proto' file. The code should implement very simple server and client applications.
 
+# Architecture
+
+This app follows roughly the [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html). This architecture is supposed to protect the most important aspects of the application - the business logic.
+
+![Architecture Sketch](./docs/architecture.png)
+
+Here I separated the actual algorithm as much as possible from the rest of the app. On the outside are the gRPC and data storage. Below that comes the use case layer, which acts a mediator.
+
+Here I have a design smell, because the use case layer is accessing the data storage in the intrastructure layer. Usually a gateway is defined in the use case layer which is imlemented in the infrastructure layer. Even better would be that the use case layer only manipulates the domain objects and the data access layer automatically detects these manipulations and stores them.
+
+The logic layer only contains the algortihm. I added this layer because the algorithm is the most sacred part of the code. It should be protected from changes as much as possible. The logic layer is also the only layer that is not allowed to access any other layer.
+
 # Approach
 
 - Understand and test Chaum–Pedersen protocol
@@ -23,8 +35,33 @@ At this point my time for implementation was running out, so I stopped at this p
 
 # Improvments
 
-- Integration tests as gherkin tests with [cucumber-rs](https://cucumber-rs.github.io/cucumber/current/)
-- Still too many unwrap() inside the code, which needs to be handled graciously
+- Testing
+  - Unit tests for the core algorithm
+  - Integration tests as gherkin tests with [cucumber-rs](https://cucumber-rs.github.io/cucumber/current/)
+- Design
+  - Use an event driven architecture to decouple the different parts of the application
+- Code quality / Robustness
+  - Still too many unwrap() inside the code, which needs to be handled graciously
+  - Use a logging framework to log errors and other information
 - Performance
   - Reduce/Remove RwLocks as much as possible - this will be a huge bottleneck
   - Use a database to handle growing data amount and for perstistence
+
+# How to run
+The application is dockerized and can be run with docker-compose. The docker-compose file is located in the root directory.
+
+```bash
+docker-compose up
+```
+
+Alternatively the application can be run with cargo. This requires the [rust toolchain]((https://www.rust-lang.org/tools/install)) to be installed:
+
+## Run the server
+```bash
+cargo run --bin auth-server
+```
+
+## Run the client
+```bash
+cargo run --bin auth-client
+```

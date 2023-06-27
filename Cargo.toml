@@ -11,6 +11,10 @@ path = "src/server.rs"
 name = "auth-client"
 path = "src/client.rs"
 
+[[bin]] # Dummy binary for docker build
+name = "dummy"
+path = "src/main.rs"
+
 [lib]
 name = "auth_lib"
 path = "src/lib/lib.rs"

@@ -26,6 +26,8 @@ use tonic::codegen::StdError;
 
 const DEFAULT_BIT_SIZE: &str = "256";
 const DEFAULT_FIXED_PARAMETERS: &str = "false";
+const DEFAULT_PORT: &str = "50051";
+const DEFAULT_HOST: &str = "[::1]";
 
 #[doc(hidden)]
 pub mod cp_grpc {
@@ -47,11 +49,23 @@ pub struct ReadmeDoctests;
 /// ```
 pub struct Config {
     /// The bit size of the prime number used in the algorithm
+    /// 
+    /// Default: 256
     pub bit_size: u16,
     /// Whether to use fixed parameters or generate new ones
     /// Caution! If this is set to true and the bit size is bigger than 256,
     /// it will take a long time for the server to start.
-    pub fixed_parameters: bool
+    /// 
+    /// Default: false
+    pub fixed_parameters: bool,
+    /// The port on which the server will listen
+    /// 
+    /// Default: 50051
+    pub port: u16,
+    /// The host on which the server will listen
+    /// 
+    /// Default: [::1]
+    pub host: String
 }
 
 impl Config {
@@ -66,6 +80,12 @@ impl Config {
                 .unwrap_or(String::from(DEFAULT_FIXED_PARAMETERS))
                 .parse::<bool>()
                 .expect("FIXED_PARAMETERS must be a boolean"),
+            port: env::var("PORT")
+                .unwrap_or(String::from(DEFAULT_PORT))
+                .parse::<u16>()
+                .expect("PORT must be a number"),
+            host: env::var("HOST")
+                .unwrap_or(String::from(DEFAULT_HOST)),
         }
     }
 }
@@ -83,7 +103,7 @@ impl Config {
 /// # let mut config = Config::build();
 /// # config.fixed_parameters = true;
 /// let server = bootstrap_server(Some(config));
-/// let addr: std::net::SocketAddr = "[::1]:50051".parse()?;
+/// let addr = format!("{}:{}", config.host, config.port).parse()?;
 /// 
 /// // This is the ready-to-use grpc server
 /// let grpc_server = AuthServer::new(server);
