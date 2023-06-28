@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["STRUCT_NAME"],"fn":["ScalarWrapper"],"mod":["auth_client","auth_server"],"struct":["AuthenticationAnswerRequest","AuthenticationAnswerResponse","AuthenticationChallengeRequest","AuthenticationChallengeResponse","AuthenticationParametersResponse","RegisterRequest","RegisterResponse"]};

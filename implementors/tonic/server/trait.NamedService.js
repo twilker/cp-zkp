@@ -1,0 +1,3 @@
+(function() {var implementors = {
+"auth_client":[["impl&lt;T: <a class=\"trait\" href=\"auth_client/auth_client/auth_server/trait.Auth.html\" title=\"trait auth_client::auth_client::auth_server::Auth\">Auth</a>&gt; <a class=\"trait\" href=\"https://docs.rs/tonic/0.9.2/tonic/server/trait.NamedService.html\" title=\"trait tonic::server::NamedService\">NamedService</a> for <a class=\"struct\" href=\"auth_client/auth_client/auth_server/struct.AuthServer.html\" title=\"struct auth_client::auth_client::auth_server::AuthServer\">AuthServer</a>&lt;T&gt;"]]
+};if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

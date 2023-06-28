@@ -1,0 +1,1 @@
+window.ALL_CRATES = ["auth_client","auth_lib","auth_server","dummy"];
