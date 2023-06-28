@@ -9,6 +9,14 @@
 
 Design and write the code that implements the ZKP Chaum–Pedersen Protocol outlined in ["Cryptography: An Introduction (3rd Edition) Nigel Smart"](https://www.cs.umd.edu/~waa/414-F11/IntroToCrypto.pdf) page 377 section "3. Sigma Protocols" subsection "3.2. Chaum–Pedersen Protocol.". Solution should be implemented as server and client using gRPC protocol according to the provided interface described in the './proto/auth.proto' file. The code should implement very simple server and client applications.
 
+## Presentation
+
+
+
+https://github.com/twilker/cp-zkp/assets/2802526/ff20f77d-769f-47df-87df-2c2b527aec84
+
+
+
 ## Architecture
 
 This app follows roughly the [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html). This architecture is supposed to protect the most important aspects of the application - the business logic.
