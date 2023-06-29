@@ -31,6 +31,7 @@ tokio = { version = "1.0", features = ["macros", "rt-multi-thread"] }
 once_cell = "1.18.0"
 async-trait = "0.1.68"
 clap = { version = "4.3.8", features = ["derive"] }
+eventador = { version = "0.0.18", features = ["async"] }
 
 [dependencies.uuid]
 version = "1.3.4"
